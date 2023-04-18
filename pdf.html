@@ -1,0 +1,31 @@
+---
+layout: default
+title: PDF Viewer
+---
+<h1>PDF Viewer</h1>
+<div id="pdf-container"></div>
+<script src="/pdfjs/build/pdf.js"></script>
+<script>
+  var url = "{{ site.baseurl }}{{ page.url }}";
+  var filename = url.substring(url.lastIndexOf("/") + 1);
+  var pdf = null;
+  pdfjsLib.getDocument("/uploads/" + filename).promise.then(function(pdfDoc) {
+    pdf = pdfDoc;
+    renderPage(1);
+  });
+
+  function renderPage(pageNumber) {
+    pdf.getPage(pageNumber).then(function(page) {
+      var canvas = document.createElement("canvas");
+      var context = canvas.getContext("2d");
+      var viewport = page.getViewport(1.0);
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      document.getElementById("pdf-container").appendChild(canvas);
+      page.render({
+        canvasContext: context,
+        viewport: viewport
+      });
+    });
+  }
+</script>
