@@ -28,4 +28,14 @@ title: PDF Viewer
       });
     });
   }
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var query = urlParams.get("query");
+  if (query) {
+    fetch("/search?query=" + query).then(function(response) {
+      response.text().then(function(text) {
+        document.getElementById("pdf-container").innerHTML = text;
+      });
+    });
+  }
 </script>
